@@ -15,6 +15,10 @@ public class TurtleMove : MonoBehaviour
     bool shot;
     bool shoot;
 
+    public int turns;
+    public int turnNumber;
+
+
     Vector3 startPos;
 
     public float shootBuffer;
@@ -97,19 +101,25 @@ public class TurtleMove : MonoBehaviour
             shoot = false;
             shot = true;
             rb.AddForce(Vector3.forward * power);
-            rb.AddTorque(Vector3.forward * power);
+            rb.AddTorque(Vector3.up * power / 10f);
         }
     }
 
     void Return()
     {
-        transform.rotation = Quaternion.Euler(Vector3.zero);
+        transform.rotation = Quaternion.Euler(new Vector3(-90, 0, -90));
         GetPoints();
         checkToReset = false;
         power = 0;
         shot = false;
         transform.position = startPos;
         boostA = boostAmount;
+        turnNumber++;
+
+        if (turnNumber > turns)
+        {
+            print("game over");
+        }
     }
 
     void GetPoints()

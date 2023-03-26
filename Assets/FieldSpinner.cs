@@ -5,15 +5,6 @@ using UnityEngine;
 public class FieldSpinner : MonoBehaviour
 {
     public float spinSpeed;
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
     private void FixedUpdate()
     {

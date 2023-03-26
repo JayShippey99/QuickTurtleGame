@@ -35,6 +35,9 @@ public class TurtleMove : MonoBehaviour
     public GameObject boostFire;
 
     public Controller c;
+
+    public GameObject pauseScreen;
+
     void Start()
     {
         startPos = transform.position;
@@ -74,6 +77,20 @@ public class TurtleMove : MonoBehaviour
             float angle = Mathf.Atan2(Input.mousePosition.y - cPos.y, cPos.x - Input.mousePosition.x);
 
             booster.transform.rotation = Quaternion.Euler(0, (Mathf.Rad2Deg * angle), 0);
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (Time.timeScale != 0)
+                {
+                    pauseScreen.SetActive(true);
+                    Time.timeScale = 0;
+                }
+                else
+                {
+                    Time.timeScale = 1;
+                    pauseScreen.SetActive(false);
+                }
+            }
         }
     }
 

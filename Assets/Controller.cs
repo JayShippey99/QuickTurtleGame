@@ -10,6 +10,11 @@ public class Controller : MonoBehaviour
 
     public bool playing;
 
+    private void Start()
+    {
+        Time.timeScale = 1;
+    }
+
     public void GoToGame()
     {
         menu.SetActive(false);

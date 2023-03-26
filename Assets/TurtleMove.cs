@@ -33,6 +33,8 @@ public class TurtleMove : MonoBehaviour
 
     public GameObject booster;
     public GameObject boostFire;
+
+    public Controller c;
     void Start()
     {
         startPos = transform.position;
@@ -42,66 +44,72 @@ public class TurtleMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(shot);
-        if (Input.GetMouseButton(0) && !shot)
+        if (c.playing)
         {
-            power += Time.deltaTime * powerGainAmount;
+            print(shot);
+            if (Input.GetMouseButton(0) && !shot)
+            {
+                power += Time.deltaTime * powerGainAmount;
 
-            if (power > powerLimit) power = powerLimit; 
+                if (power > powerLimit) power = powerLimit;
+            }
+
+            if (Input.GetMouseButtonUp(0) && !shot)
+            {
+                shoot = true;
+                shootb = shootBuffer;
+            }
+
+            if (!shot)
+            {
+                transform.position = startPos + Mathf.Cos(Time.time) * Vector3.right * 2;
+            }
+
+            if (shot) shootb -= Time.deltaTime;
+
+            if (shootb <= 0) checkToReset = true;
+
+            // need to get world to screen point of turtle, and mouse position, get the angle to the mouse position and hten set the y rotation of the booster to that?
+            Vector3 cPos = Camera.main.WorldToScreenPoint(transform.position);
+            float angle = Mathf.Atan2(Input.mousePosition.y - cPos.y, cPos.x - Input.mousePosition.x);
+
+            booster.transform.rotation = Quaternion.Euler(0, (Mathf.Rad2Deg * angle), 0);
         }
-
-        if (Input.GetMouseButtonUp(0) && !shot)
-        {
-            shoot = true;
-            shootb = shootBuffer;
-        }
-
-        if (!shot)
-        {
-            transform.position = startPos + Mathf.Cos(Time.time) * Vector3.right * 2;
-        }
-
-        if (shot) shootb -= Time.deltaTime;
-
-        if (shootb <= 0) checkToReset = true;
-
-        // need to get world to screen point of turtle, and mouse position, get the angle to the mouse position and hten set the y rotation of the booster to that?
-        Vector3 cPos = Camera.main.WorldToScreenPoint(transform.position);
-        float angle = Mathf.Atan2(Input.mousePosition.y - cPos.y, cPos.x - Input.mousePosition.x);
-
-        booster.transform.rotation = Quaternion.Euler(0, (Mathf.Rad2Deg * angle), 0);
     }
 
 
     private void FixedUpdate()
     {
-        if (shot && Input.GetMouseButton(0) && boostA > 0)
+        if (c.playing)
         {
-            Vector3 cPos = Camera.main.WorldToScreenPoint(transform.position);
-            float angle = Mathf.Atan2(Input.mousePosition.y - cPos.y, Input.mousePosition.x - cPos.x);
+            if (shot && Input.GetMouseButton(0) && boostA > 0)
+            {
+                Vector3 cPos = Camera.main.WorldToScreenPoint(transform.position);
+                float angle = Mathf.Atan2(Input.mousePosition.y - cPos.y, Input.mousePosition.x - cPos.x);
 
-            rb.AddForce(new Vector3(Mathf.Cos(angle) * boostPower, 0, Mathf.Sin(angle) * boostPower));
+                rb.AddForce(new Vector3(Mathf.Cos(angle) * boostPower, 0, Mathf.Sin(angle) * boostPower));
 
-            boostA -= Time.deltaTime;
-            print(boostA);
-            boostFire.SetActive(true);
-        }
-        else
-        {
-            boostFire.SetActive(false);
-        }
+                boostA -= Time.deltaTime;
+                print(boostA);
+                boostFire.SetActive(true);
+            }
+            else
+            {
+                boostFire.SetActive(false);
+            }
 
-        if (rb.velocity.magnitude < .1 && shot && checkToReset)
-        {
-            Return();
-        }
+            if (rb.velocity.magnitude < .1 && shot && checkToReset)
+            {
+                Return();
+            }
 
-        if (shoot)
-        {
-            shoot = false;
-            shot = true;
-            rb.AddForce(Vector3.forward * power);
-            rb.AddTorque(Vector3.up * power / 10f);
+            if (shoot)
+            {
+                shoot = false;
+                shot = true;
+                rb.AddForce(Vector3.forward * power);
+                rb.AddTorque(Vector3.up * power / 10f);
+            }
         }
     }
 

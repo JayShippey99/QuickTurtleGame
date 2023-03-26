@@ -28,6 +28,7 @@ public class TurtleMove : MonoBehaviour
     public TextMeshProUGUI scoreText;
 
     public GameObject booster;
+    public GameObject boostFire;
     void Start()
     {
         startPos = transform.position;
@@ -79,6 +80,11 @@ public class TurtleMove : MonoBehaviour
 
             boostA -= Time.deltaTime;
             print(boostA);
+            boostFire.SetActive(true);
+        }
+        else
+        {
+            boostFire.SetActive(false);
         }
 
         if (rb.velocity.magnitude < .1 && shot && checkToReset)
@@ -97,6 +103,7 @@ public class TurtleMove : MonoBehaviour
 
     void Return()
     {
+        transform.rotation = Quaternion.Euler(Vector3.zero);
         GetPoints();
         checkToReset = false;
         power = 0;

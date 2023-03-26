@@ -13,6 +13,11 @@ public class FieldSpinner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    }
+
+    private void FixedUpdate()
+    {
         transform.Rotate(Vector3.up, Time.deltaTime * spinSpeed);
+
     }
 }

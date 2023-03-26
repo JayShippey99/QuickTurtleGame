@@ -6,6 +6,8 @@ public class CameraMove : MonoBehaviour
 {
     Vector3 offset;
     public Transform target;
+
+    public float lerpSpeed;
     void Start()
     {
         offset = transform.position - target.position;
@@ -14,6 +16,16 @@ public class CameraMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.Lerp(transform.position, target.position + offset, 1);
+    }
+
+    private void FixedUpdate()
+    {
+        transform.position = Vector3.Lerp(transform.position, target.position + offset, lerpSpeed);
+
+    }
+
+    private void LateUpdate()
+    {
+
     }
 }

@@ -124,16 +124,19 @@ public class TurtleMove : MonoBehaviour
 
     void GetPoints()
     {
+
         points = 0;
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, GetComponent<CapsuleCollider>().radius);
         foreach (var hitCollider in hitColliders)
         {
-            print(hitCollider.name);
             if (hitCollider.GetComponent<PointsRing>() != null)
             {
                 if (points < hitCollider.GetComponent<PointsRing>().points) points = hitCollider.GetComponent<PointsRing>().points;
             }
         }
+        if (points == 100) turns++;
+
+
         AddToPoints();
     }
     
